@@ -12,8 +12,8 @@ public partial class Player : CharacterBody2D
 	[Export] private Vector2 _spawnPos;
 	[Signal] public delegate void DeathEventHandler();
 
-	private bool _started = false;
-	private bool _dead = false;
+	private bool _started;
+	private bool _dead;
 
 	public override void _Ready()
 	{
@@ -34,7 +34,6 @@ public partial class Player : CharacterBody2D
 
 	public void OnStart()
 	{
-		GD.Print("started");
 		_started = true;
 		_animPlayer.Play("fly");
 	}

@@ -1,5 +1,5 @@
-using Godot;
 using System;
+using Godot;
 
 namespace AnotherFlappyBird.Scripts;
 public partial class Main : Node2D
@@ -13,12 +13,14 @@ public partial class Main : Node2D
 	[Export] private float _maxPipeY;
 	[Export] private Player _player;
 	[Export] private Timer _pipeSpawnTimer;
-	[Export] private Node _pausable;
-	[Export] private Label _scoreLabel;
-	private bool _dead = false;
-
-	private bool _started = false;
-	private int _score = 0;
+	[Export] private RichTextLabel _scoreLabel;
+	[Export] private RichTextLabel _highScoreLabel;
+	
+	private bool _dead;
+	private bool _started;
+	
+	private int _score;
+	private int _highScore;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -26,20 +28,28 @@ public partial class Main : Node2D
 		_pipeSpawnTimer.Timeout += SpawnPipe;
 		_player.Death += OnDeath;
 		_groundAnimPlayer.Play("scroll");
+		SetHighScore(SaveManager.LoadScore());
 	}
 
 	private void SetScore(int score)
 	{
 		_score = score;
-		_scoreLabel.Text = score.ToString();
+		_scoreLabel.Text = $"[center]{score.ToString()}[/center]";
+		
+		if (score > _highScore)
+			SetHighScore(score);
+	}
+
+	private void SetHighScore(int score)
+	{
+		_highScore = score;
+		_highScoreLabel.Text = $"[center]HIGH: {_highScore.ToString()}[/center]";
 	}
 
 	private void StartGame()
 	{
-		GD.Print("start game");
-		_pipeSpawnTimer.Start();
 		GD.Randomize();
-		GetTree().Paused = false;
+		_pipeSpawnTimer.Start();
 		SpawnPipe();
 		_started = true;
 		_groundAnimPlayer.Play("scroll");
@@ -52,7 +62,7 @@ public partial class Main : Node2D
 		pipe.Score += OnScore; 
 		pipe.Position = new Vector2(_pipeSpawnPos.Position.X, (float) Math.Round(GD.RandRange(_minPipeY, _maxPipeY)));
 		pipe.DespawnPos = _pipeDespawnPos;
-		_pausable.AddChild(pipe);
+		AddChild(pipe);
 	}
 
 	private void OnScore()
@@ -64,11 +74,10 @@ public partial class Main : Node2D
 	{
 		_started = false;
 		_dead = true;
-		GetTree().Paused = true;
 		_groundAnimPlayer.Pause();
-		GD.Print("Death");
 		_pipeSpawnTimer.Stop();
-		SetScore(0);
+		GetTree().CallGroup("pipe", "OnDeath");
+		SaveManager.SaveScore(_highScore);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -87,5 +96,6 @@ public partial class Main : Node2D
 		_dead = false;
 		_player.OnInit();
 		_groundAnimPlayer.Play("scroll");
+		SetScore(0);
 	}
 }

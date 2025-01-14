@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdhonqlhsus7f"
-path="res://.godot/imported/Bird1-1.png-08fe64ffdd9cef07ecaf195e10a8f5d8.ctex"
+uid="uid://ctnyfu3m030bi"
+path="res://.godot/imported/Bird1-1-2.png.png-7a172a92fd11f2610ca670056b0cebe6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Bird1-1.png"
-dest_files=["res://.godot/imported/Bird1-1.png-08fe64ffdd9cef07ecaf195e10a8f5d8.ctex"]
+source_file="res://Assets/Bird1-1-2.png.png"
+dest_files=["res://.godot/imported/Bird1-1-2.png.png-7a172a92fd11f2610ca670056b0cebe6.ctex"]
 
 [params]
 
@@ -25,10 +25,10 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
-process/fix_alpha_border=false
+process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

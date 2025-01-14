@@ -49,9 +49,4 @@ public partial class Pipe : Area2D
 	{
 		SetPhysicsProcess(false);
 	}
-	
-	public void OnInit()
-	{
-		
-	}
 }
