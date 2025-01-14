@@ -1,0 +1,72 @@
+[gd_scene load_steps=8 format=3 uid="uid://cd2nfqu1xstwa"]
+
+[ext_resource type="Script" path="res://Scripts/Player.cs" id="1_d5soy"]
+[ext_resource type="Texture2D" uid="uid://bdhonqlhsus7f" path="res://Assets/Bird1-1.png" id="1_oc1mc"]
+
+[sub_resource type="Animation" id="Animation_j5w4y"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="Animation" id="Animation_viihv"]
+resource_name = "fly"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_740qx"]
+_data = {
+"RESET": SubResource("Animation_j5w4y"),
+"fly": SubResource("Animation_viihv")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kngew"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i1imv"]
+radius = 5.0
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("_hurtbox", "_animPlayer")]
+script = ExtResource("1_d5soy")
+_hurtbox = NodePath("HurtBox")
+_animPlayer = NodePath("AnimationPlayer")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_oc1mc")
+hframes = 4
+frame = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_740qx")
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kngew")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("CircleShape2D_i1imv")

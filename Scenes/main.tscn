@@ -1,18 +1,103 @@
-[gd_scene load_steps=3 format=4 uid="uid://d0568obrw2dj0"]
+[gd_scene load_steps=8 format=4 uid="uid://d0568obrw2dj0"]
 
+[ext_resource type="Script" path="res://Scripts/Main.cs" id="1_66sst"]
 [ext_resource type="TileSet" uid="uid://3eq66yw44frp" path="res://Assets/ground.tres" id="1_tycpo"]
 [ext_resource type="PackedScene" uid="uid://biq1urlkyppi4" path="res://Scenes/pipe.tscn" id="2_pspsc"]
+[ext_resource type="PackedScene" uid="uid://cd2nfqu1xstwa" path="res://Scenes/player.tscn" id="4_efp3w"]
 
-[node name="main" type="Node2D"]
+[sub_resource type="Animation" id="Animation_x3o6p"]
+resource_name = "scroll"
+length = 6.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 6),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-384, 0)]
+}
 
-[node name="Ground" type="TileMapLayer" parent="."]
-z_index = 1
-tile_map_data = PackedByteArray("AAAAAAwAAAABAAUAAAAAAA0AAAAEAAUAAAABAAwAAAACAAUAAAABAA0AAAAEAAUAAAACAAwAAAACAAUAAAACAA0AAAAEAAUAAAADAAwAAAABAAUAAAADAA0AAAAEAAUAAAAEAAwAAAADAAUAAAAEAA0AAAAEAAUAAAAFAAwAAAACAAUAAAAFAA0AAAAEAAUAAAAGAAwAAAABAAUAAAAGAA0AAAAEAAUAAAAHAAwAAAABAAUAAAAHAA0AAAAEAAUAAAAIAAwAAAABAAUAAAAIAA0AAAAEAAUAAAAJAAwAAAABAAUAAAAJAA0AAAAEAAUAAAAKAAwAAAABAAUAAAAKAA0AAAAEAAUAAAALAAwAAAABAAUAAAALAA0AAAAEAAUAAAAMAAwAAAABAAUAAAAMAA0AAAAEAAUAAAANAAwAAAABAAUAAAANAA0AAAAEAAUAAAAOAAwAAAABAAUAAAAOAA0AAAAEAAUAAAAPAAwAAAABAAUAAAAPAA0AAAAEAAUAAAAQAAwAAAABAAUAAAAQAA0AAAAEAAUAAAARAAwAAAABAAUAAAARAA0AAAAEAAUAAAASAAwAAAABAAUAAAASAA0AAAAEAAUAAAATAAwAAAABAAUAAAATAA0AAAAEAAUAAAAUAAwAAAABAAUAAAAUAA0AAAAEAAUAAAAVAAwAAAABAAUAAAAVAA0AAAAEAAUAAAAWAAwAAAABAAUAAAAWAA0AAAAEAAUAAAAXAAwAAAABAAUAAAAXAA0AAAAEAAUAAAA=")
-tile_set = ExtResource("1_tycpo")
+[sub_resource type="Animation" id="Animation_d87md"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
 
-[node name="Pipe" parent="." instance=ExtResource("2_pspsc")]
-position = Vector2(295, 88)
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6cn8y"]
+_data = {
+"RESET": SubResource("Animation_d87md"),
+"scroll": SubResource("Animation_x3o6p")
+}
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="main" type="Node2D" node_paths=PackedStringArray("_pipeSpawnPos", "_pipeDespawnPos", "_groundAnimPlayer", "_player", "_pipeSpawnTimer", "_pausable", "_scoreLabel")]
+process_mode = 3
+script = ExtResource("1_66sst")
+_pipeScene = ExtResource("2_pspsc")
+_pipeSpawnPos = NodePath("Pausable/SpawnPos")
+_pipeDespawnPos = NodePath("Pausable/DespawnPos")
+_groundAnimPlayer = NodePath("Ground/AnimationPlayer")
+_minPipeY = 32.0
+_maxPipeY = 140.0
+_player = NodePath("Player")
+_pipeSpawnTimer = NodePath("Pausable/PipeSpawnTimer")
+_pausable = NodePath("Pausable")
+_scoreLabel = NodePath("CanvasLayer/Label")
+
+[node name="Pausable" type="Node" parent="."]
+process_mode = 1
+
+[node name="Camera2D" type="Camera2D" parent="Pausable"]
 anchor_mode = 0
 zoom = Vector2(3, 3)
+
+[node name="SpawnPos" type="Marker2D" parent="Pausable"]
+position = Vector2(432, 88)
+
+[node name="DespawnPos" type="Marker2D" parent="Pausable"]
+position = Vector2(-64, 88)
+
+[node name="PipeSpawnTimer" type="Timer" parent="Pausable"]
+wait_time = 2.5
+
+[node name="Player" parent="." instance=ExtResource("4_efp3w")]
+process_mode = 3
+z_index = 2
+position = Vector2(56, 109)
+_spawnPos = Vector2(56, 109)
+
+[node name="Ground" type="TileMapLayer" parent="."]
+process_mode = 3
+z_index = 1
+tile_map_data = PackedByteArray("AAAAAAwAAAABAAUAAAAAAA0AAAAEAAUAAAABAAwAAAACAAUAAAABAA0AAAAEAAUAAAACAAwAAAACAAUAAAACAA0AAAAEAAUAAAADAAwAAAABAAUAAAADAA0AAAAEAAUAAAAEAAwAAAADAAUAAAAEAA0AAAAEAAUAAAAFAAwAAAACAAUAAAAFAA0AAAAEAAUAAAAGAAwAAAABAAUAAAAGAA0AAAAEAAUAAAAHAAwAAAABAAUAAAAHAA0AAAAEAAUAAAAIAAwAAAABAAUAAAAIAA0AAAAEAAUAAAAJAAwAAAABAAUAAAAJAA0AAAAEAAUAAAAKAAwAAAABAAUAAAAKAA0AAAAEAAUAAAALAAwAAAABAAUAAAALAA0AAAAEAAUAAAAMAAwAAAABAAUAAAAMAA0AAAAEAAUAAAANAAwAAAABAAUAAAANAA0AAAAEAAUAAAAOAAwAAAABAAUAAAAOAA0AAAAEAAUAAAAPAAwAAAABAAUAAAAPAA0AAAAEAAUAAAAQAAwAAAABAAUAAAAQAA0AAAAEAAUAAAARAAwAAAABAAUAAAARAA0AAAAEAAUAAAASAAwAAAABAAUAAAASAA0AAAAEAAUAAAATAAwAAAABAAUAAAATAA0AAAAEAAUAAAAUAAwAAAABAAUAAAAUAA0AAAAEAAUAAAAVAAwAAAABAAUAAAAVAA0AAAAEAAUAAAAWAAwAAAABAAUAAAAWAA0AAAAEAAUAAAAXAAwAAAABAAUAAAAXAA0AAAAEAAUAAAAYAAwAAAABAAUAAAAYAA0AAAAEAAUAAAAZAAwAAAACAAUAAAAZAA0AAAAEAAUAAAAaAAwAAAACAAUAAAAaAA0AAAAEAAUAAAAbAAwAAAABAAUAAAAbAA0AAAAEAAUAAAAcAAwAAAADAAUAAAAcAA0AAAAEAAUAAAAdAAwAAAACAAUAAAAdAA0AAAAEAAUAAAAeAAwAAAABAAUAAAAeAA0AAAAEAAUAAAAfAAwAAAABAAUAAAAfAA0AAAAEAAUAAAAgAAwAAAABAAUAAAAgAA0AAAAEAAUAAAAhAAwAAAABAAUAAAAhAA0AAAAEAAUAAAAiAAwAAAABAAUAAAAiAA0AAAAEAAUAAAAjAAwAAAABAAUAAAAjAA0AAAAEAAUAAAAkAAwAAAABAAUAAAAkAA0AAAAEAAUAAAAlAAwAAAABAAUAAAAlAA0AAAAEAAUAAAAmAAwAAAABAAUAAAAmAA0AAAAEAAUAAAAnAAwAAAABAAUAAAAnAA0AAAAEAAUAAAAoAAwAAAABAAUAAAAoAA0AAAAEAAUAAAApAAwAAAABAAUAAAApAA0AAAAEAAUAAAAqAAwAAAABAAUAAAAqAA0AAAAEAAUAAAArAAwAAAABAAUAAAArAA0AAAAEAAUAAAAsAAwAAAABAAUAAAAsAA0AAAAEAAUAAAAtAAwAAAABAAUAAAAtAA0AAAAEAAUAAAAuAAwAAAABAAUAAAAuAA0AAAAEAAUAAAAvAAwAAAABAAUAAAAvAA0AAAAEAAUAAAA=")
+tile_set = ExtResource("1_tycpo")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ground"]
+libraries = {
+"": SubResource("AnimationLibrary_6cn8y")
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_right = -768.0
+offset_bottom = 75.0
+grow_horizontal = 2
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://biq1urlkyppi4"]
+[gd_scene load_steps=6 format=3 uid="uid://biq1urlkyppi4"]
 
 [ext_resource type="Script" path="res://Scripts/Pipe.cs" id="2_is0mq"]
 [ext_resource type="Texture2D" uid="uid://dbmt7sqbw1a37" path="res://Assets/large pipe.png" id="2_pdr7t"]
@@ -9,9 +9,14 @@ size = Vector2(32, 159)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2jgf4"]
 size = Vector2(32, 160)
 
-[node name="Pipe" type="AnimatableBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rx5h0"]
+size = Vector2(12, 42)
+
+[node name="Pipe" type="Area2D" node_paths=PackedStringArray("_scoreArea")]
+collision_layer = 3
 script = ExtResource("2_is0mq")
-_speed = 100.0
+_speed = 50.0
+_scoreArea = NodePath("ScoreArea")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 112.5)
@@ -29,3 +34,9 @@ texture = ExtResource("2_pdr7t")
 position = Vector2(0, -96)
 texture = ExtResource("2_pdr7t")
 flip_v = true
+
+[node name="ScoreArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScoreArea"]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_rx5h0")
